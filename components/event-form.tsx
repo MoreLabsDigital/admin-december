@@ -62,7 +62,6 @@ export function EventForm({ event }: { event?: EventRecord }) {
   const [image, setImage] = useState(event?.image_url || "");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
-  const [published, setPublished] = useState(event?.is_published || false);
   const fileInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (state.id) {
@@ -351,23 +350,6 @@ export function EventForm({ event }: { event?: EventRecord }) {
                   <p>Decide when your event goes live.</p>
                 </div>
               </div>
-              <label className="publish-toggle">
-                <div>
-                  <strong>{published ? "Published" : "Save as draft"}</strong>
-                  <small>
-                    {published
-                      ? "Visible on your public website"
-                      : "Hidden until you're ready"}
-                  </small>
-                </div>
-                <input
-                  name="is_published"
-                  type="checkbox"
-                  checked={published}
-                  onChange={(e) => setPublished(e.target.checked)}
-                />
-                <span className="toggle-track" />
-              </label>
               <div className="info-note">
                 Only published events can be viewed by visitors. Drafts are
                 visible only to the admin account.
@@ -381,14 +363,21 @@ export function EventForm({ event }: { event?: EventRecord }) {
               )}
               <button
                 type="submit"
+                name="is_published"
+                value="false"
+                disabled={pending || uploading}
+                className="button submit-button button-draft"
+              >
+                {pending ? "Saving event…" : "Save as draft"}
+              </button>
+              <button
+                type="submit"
+                name="is_published"
+                value="true"
                 disabled={pending || uploading}
                 className="button button-black submit-button"
               >
-                {pending
-                  ? "Saving event…"
-                  : event
-                    ? "Save changes"
-                    : "Create event"}
+                {pending ? "Saving event…" : "Publish"}
                 {pending ? (
                   <LoaderCircle size={17} className="spin" />
                 ) : (

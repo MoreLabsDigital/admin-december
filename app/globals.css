@@ -917,6 +917,14 @@ p {
   justify-content: space-between;
   min-height: 53px;
 }
+.button-draft {
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #111;
+}
+.button-draft:hover {
+  background: #f7f7f7;
+}
 .cancel-link {
   text-align: center;
   font-size: 11px;

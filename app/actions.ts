@@ -97,7 +97,9 @@ export async function saveEvent(
     ticket_url: optionalUrl(ticket),
     organizer: String(form.get("organizer") || "").trim() || null,
     source: "admin",
-    is_published: form.get("is_published") === "on",
+    is_published: ["on", "true"].includes(
+      String(form.get("is_published") || ""),
+    ),
   };
   const query = id
     ? supabase.from("events").update(record).eq("id", id)
