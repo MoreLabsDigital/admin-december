@@ -19,6 +19,7 @@ export type EventRecord = {
     source: string;
     is_published: boolean;
     is_sold_out: boolean;
+    is_featured: boolean;
     created_at: string;
     updated_at: string;
 };

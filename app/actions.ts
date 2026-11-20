@@ -175,6 +175,10 @@ export async function saveEvent(
     // Ticket availability
     is_sold_out:
       form.get("is_sold_out") === "true",
+    
+    is_featured:
+      form.get("is_featured") === "true",
+
   };
 
   const query = id

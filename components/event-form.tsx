@@ -1,12 +1,6 @@
-
 "use client";
 
-import {
-  useActionState,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -58,23 +52,15 @@ function Field({
   );
 }
 
-export function EventForm({
-  event,
-}: {
-  event?: EventRecord;
-}) {
+export function EventForm({ event }: { event?: EventRecord }) {
   const router = useRouter();
-  const [state, action, pending] = useActionState(
-    saveEvent,
-    initial
-  );
+  const [state, action, pending] = useActionState(saveEvent, initial);
 
-  const [image, setImage] = useState(
-    event?.image_url || ""
-  );
-  const [soldOut, setSoldOut] = useState(
-    event?.is_sold_out ?? false
-  );
+  const [image, setImage] = useState(event?.image_url || "");
+  const [soldOut, setSoldOut] = useState(event?.is_sold_out ?? false);
+
+  const [featured, setFeatured] = useState(event?.is_featured ?? false);
+
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
@@ -91,11 +77,7 @@ export function EventForm({
 
     if (!file) return;
 
-    if (
-      !["image/jpeg", "image/png", "image/webp"].includes(
-        file.type
-      )
-    ) {
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
       setUploadError("Use JPG, PNG or WebP images only.");
       return;
     }
@@ -128,17 +110,11 @@ export function EventForm({
 
       if (error) throw error;
 
-      const { data } = supabase.storage
-        .from("event-images")
-        .getPublicUrl(path);
+      const { data } = supabase.storage.from("event-images").getPublicUrl(path);
 
       setImage(data.publicUrl);
     } catch (error) {
-      setUploadError(
-        error instanceof Error
-          ? error.message
-          : "Upload failed."
-      );
+      setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
       setUploading(false);
     }
@@ -167,8 +143,7 @@ export function EventForm({
         <div className="heading-row form-heading">
           <div>
             <span className="overline">
-              EVENT EDITOR /{" "}
-              {event ? "EDIT RECORD" : "NEW ENTRY"}
+              EVENT EDITOR / {event ? "EDIT RECORD" : "NEW ENTRY"}
             </span>
 
             <h1 className="page-title">
@@ -189,23 +164,13 @@ export function EventForm({
         </div>
 
         <form action={action} className="editor-layout">
-          <input
-            type="hidden"
-            name="id"
-            value={event?.id || ""}
-          />
+          <input type="hidden" name="id" value={event?.id || ""} />
 
-          <input
-            type="hidden"
-            name="image_url"
-            value={image}
-          />
+          <input type="hidden" name="image_url" value={image} />
 
-          <input
-            type="hidden"
-            name="is_sold_out"
-            value={String(soldOut)}
-          />
+          <input type="hidden" name="is_sold_out" value={String(soldOut)} />
+
+          <input type="hidden" name="is_featured" value={String(featured)} />
 
           <div className="editor-main">
             {/* ESSENTIAL DETAILS */}
@@ -228,9 +193,7 @@ export function EventForm({
                 />
 
                 <div className="field">
-                  <label htmlFor="description">
-                    DESCRIPTION
-                  </label>
+                  <label htmlFor="description">DESCRIPTION</label>
                   <textarea
                     name="description"
                     id="description"
@@ -242,21 +205,14 @@ export function EventForm({
 
                 <div className="form-grid">
                   <div className="field">
-                    <label htmlFor="category">
-                      CATEGORY
-                    </label>
+                    <label htmlFor="category">CATEGORY</label>
                     <select
                       name="category"
                       id="category"
-                      defaultValue={
-                        event?.category || "Experiences"
-                      }
+                      defaultValue={event?.category || "Experiences"}
                     >
                       {CATEGORIES.map((category) => (
-                        <option
-                          key={category}
-                          value={category}
-                        >
+                        <option key={category} value={category}>
                           {category}
                         </option>
                       ))}
@@ -305,18 +261,14 @@ export function EventForm({
                     label="Start time"
                     name="start_time"
                     type="time"
-                    defaultValue={
-                      event?.start_time?.slice(0, 5)
-                    }
+                    defaultValue={event?.start_time?.slice(0, 5)}
                   />
 
                   <Field
                     label="End time"
                     name="end_time"
                     type="time"
-                    defaultValue={
-                      event?.end_time?.slice(0, 5)
-                    }
+                    defaultValue={event?.end_time?.slice(0, 5)}
                   />
                 </div>
 
@@ -351,9 +303,7 @@ export function EventForm({
                 <span className="section-number">03</span>
                 <div>
                   <h2>Tickets & pricing</h2>
-                  <p>
-                    Send guests directly to the ticket seller.
-                  </p>
+                  <p>Send guests directly to the ticket seller.</p>
                 </div>
               </div>
 
@@ -363,9 +313,7 @@ export function EventForm({
                     label="Price from (NGN)"
                     name="price_min"
                     type="number"
-                    defaultValue={
-                      event?.price_min?.toString() ?? ""
-                    }
+                    defaultValue={event?.price_min?.toString() ?? ""}
                     placeholder="e.g. 15000"
                     hint="Leave empty if unknown; enter 0 for free."
                   />
@@ -399,10 +347,7 @@ export function EventForm({
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (
-                    e.key === "Enter" ||
-                    e.key === " "
-                  ) {
+                  if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     fileInput.current?.click();
                   }
@@ -421,14 +366,10 @@ export function EventForm({
                     </div>
 
                     <strong>
-                      {uploading
-                        ? "Uploading…"
-                        : "Click to upload flyer"}
+                      {uploading ? "Uploading…" : "Click to upload flyer"}
                     </strong>
 
-                    <small>
-                      JPG, PNG, WebP · Up to 5 MB
-                    </small>
+                    <small>JPG, PNG, WebP · Up to 5 MB</small>
                   </>
                 )}
 
@@ -468,15 +409,13 @@ export function EventForm({
                 <span className="section-number">05</span>
                 <div>
                   <h2>Publishing</h2>
-                  <p>
-                    Control event visibility and ticket availability.
-                  </p>
+                  <p>Control event visibility and ticket availability.</p>
                 </div>
               </div>
 
               <div className="info-note">
-                Published events are visible to visitors.
-                Drafts remain private to the admin.
+                Published events are visible to visitors. Drafts remain private
+                to the admin.
               </div>
 
               {/* SOLD OUT TOGGLE */}
@@ -535,9 +474,7 @@ export function EventForm({
                       id="sold-out-toggle"
                       type="checkbox"
                       checked={soldOut}
-                      onChange={(e) =>
-                        setSoldOut(e.target.checked)
-                      }
+                      onChange={(e) => setSoldOut(e.target.checked)}
                       style={{
                         position: "absolute",
                         inset: 0,
@@ -556,9 +493,7 @@ export function EventForm({
                         position: "absolute",
                         inset: 0,
                         borderRadius: "20px",
-                        backgroundColor: soldOut
-                          ? "#111"
-                          : "#d1d1d1",
+                        backgroundColor: soldOut ? "#111" : "#d1d1d1",
                         transition: "background 0.2s",
                       }}
                     />
@@ -581,13 +516,107 @@ export function EventForm({
               </div>
             </section>
 
+            {/* FEATURED EVENT TOGGLE */}
+            <div
+              style={{
+                marginTop: "24px",
+                paddingTop: "20px",
+                borderTop: "1px solid #e5e5e5",
+              }}
+            >
+              <label
+                htmlFor="featured-toggle"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "16px",
+                  cursor: "pointer",
+                }}
+              >
+                <div>
+                  <strong
+                    style={{
+                      display: "block",
+                      fontSize: "13px",
+                      fontWeight: 700,
+                    }}
+                  >
+                    FEATURE ON HOMEPAGE
+                  </strong>
+
+                  <small
+                    style={{
+                      display: "block",
+                      marginTop: "6px",
+                      color: "#777",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {featured
+                      ? "This event is selected for the homepage."
+                      : "This event will not appear in the featured section."}
+                  </small>
+                </div>
+
+                <span
+                  style={{
+                    position: "relative",
+                    display: "inline-block",
+                    width: "48px",
+                    height: "26px",
+                    flexShrink: 0,
+                  }}
+                >
+                  <input
+                    id="featured-toggle"
+                    type="checkbox"
+                    checked={featured}
+                    onChange={(e) => setFeatured(e.target.checked)}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      width: "100%",
+                      height: "100%",
+                      opacity: 0,
+                      cursor: "pointer",
+                      zIndex: 2,
+                      margin: 0,
+                    }}
+                  />
+
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      borderRadius: "20px",
+                      backgroundColor: featured ? "#111" : "#d1d1d1",
+                      transition: "background 0.2s",
+                    }}
+                  />
+
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      top: "3px",
+                      left: featured ? "25px" : "3px",
+                      width: "20px",
+                      height: "20px",
+                      borderRadius: "50%",
+                      backgroundColor: "#fff",
+                      transition: "left 0.2s",
+                    }}
+                  />
+                </span>
+              </label>
+            </div>
+
             {/* SAVE BUTTONS */}
             <div className="submit-card">
               {state.error && (
-                <div
-                  className="form-error"
-                  role="alert"
-                >
+                <div className="form-error" role="alert">
                   {state.error}
                 </div>
               )}
@@ -599,9 +628,7 @@ export function EventForm({
                 disabled={pending || uploading}
                 className="button submit-button button-draft"
               >
-                {pending
-                  ? "Saving event…"
-                  : "Save as draft"}
+                {pending ? "Saving event…" : "Save as draft"}
               </button>
 
               <button
@@ -611,24 +638,16 @@ export function EventForm({
                 disabled={pending || uploading}
                 className="button button-black submit-button"
               >
-                {pending
-                  ? "Saving event…"
-                  : "Publish"}
+                {pending ? "Saving event…" : "Publish"}
 
                 {pending ? (
-                  <LoaderCircle
-                    size={17}
-                    className="spin"
-                  />
+                  <LoaderCircle size={17} className="spin" />
                 ) : (
                   <ArrowRight size={18} />
                 )}
               </button>
 
-              <Link
-                href="/events"
-                className="cancel-link"
-              >
+              <Link href="/events" className="cancel-link">
                 Cancel and go back
               </Link>
             </div>
